@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .right {
+      display:inline-block; 
+      width:30%; 
+      text-align:right
+    }
+    .left {
+      display:inline-block; 
+      width:30%; 
+      text-align:left
+    }
+
+  </style>
+</head>
+<body>
+  <input type="text" id="username"/>
+  <button id="r1" onclick="joinRoom(1)" > 1 </button>
+  <button id="r2" onclick="joinRoom(2)" > 2 </button>
+  <input type="text" id="textfield"/>
+  <button id="btn" onclick="send()" > SEND </button>
+  <div id="events">
+
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script async>
+      const events = document.getElementById('events');
+
+      const newItem = (content, self) => {
+        const item = document.createElement('li');
+        item.innerHTML = `<span class=${self?'left':'right'}>${content}</span>`;
+        return item;
+      };
+
+
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+      }
+
+      const cookie = getCookie('chat_') || Math.ceil(Math.random()*10000).toString()
+      if(!document.cookie.match(/chat_/)) {
+        document.cookie = `chat_=${cookie}; max-age=3600000`
+      }
+
+      function send() {
+        const username = document.getElementById('username').value
+        const textField = document.getElementById('textfield')
+        const value = textField.value
+        if(value === '') return
+        textField.value = ''
+        socket.emit('send', {value, username: username || cookie, currentRoom })
+        events.appendChild(newItem(value, true))
+      }
+      const socket = io();
+      let currentRoom, rooms
+
+      function joinRoom(room) {
+        if (room === currentRoom) return
+        const username = document.getElementById('username').value
+        socket.emit('joinRoom', {room, username, currentRoom, cookie})
+        currentRoom = room
+        events.innerHTML = `<li>you joined room ${room}</li>`
+      }
+
+      function updateRoomCounts(data) {
+        console.log('update-rooms', data)
+        const roomsData = Object.keys(data).reduce((acc, curr) => {
+          acc.push([curr, data[curr].length])
+          return acc
+        },[])
+        if(!roomsData) return
+        roomsData.forEach(x => {
+          const [key, value] = x
+          const btn = document.getElementById('r' + key).innerText = `${key} - ${value} chatters`
+        })
+      }
+
+      socket.on('update-rooms', data => {
+        updateRoomCounts(data)
+      })
+
+      socket.on('user-join', data => {
+        events.appendChild(newItem((data.username || data.cookie) + ' joined room ' + data.room, false));
+      })
+
+      socket.on('user-leave', data => {
+        events.appendChild(newItem((data.username || data.cookie) + ' left room ' + data.room_left, false));
+      })
+
+      socket.on('newItem', data => {
+        events.appendChild(newItem(data.username + ': ' + data.value, false));
+      })
+
+      socket.on('newUser', data => {
+        events.appendChild(newItem('<em>new user connected</em>'))
+      })
+
+      socket.on('connect', () => {
+        events.appendChild(newItem('connect'));
+      });
+  </script>
+</body>
+</html>
