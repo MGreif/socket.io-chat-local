@@ -10,3 +10,6 @@
 * Because of the use of cookies, the reload wont interrupt the chat system
 
 ## Uses Cookies!
+
+## Usage
+ * `node index.js`
