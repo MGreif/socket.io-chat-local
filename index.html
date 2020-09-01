@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Socket.IO Chat</title>
   <style>
     .right {
       display:inline-block; 
@@ -20,8 +20,8 @@
 </head>
 <body>
   <input type="text" id="username" placeholder="Username"/>
-  <button id="r1" onclick="joinRoom(1)" > 1 </button>
-  <button id="r2" onclick="joinRoom(2)" > 2 </button>
+  <button id="r1" onclick="joinRoom(1)" > Room 1 </button>
+  <button id="r2" onclick="joinRoom(2)" > Room 2 </button>
   <input type="text" id="textfield"/>
   <button id="btn" onclick="send()" > SEND </button>
   <span>Active chatters: </span><span id="actives"></span>
