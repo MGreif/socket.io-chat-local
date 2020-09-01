@@ -9,9 +9,12 @@ const io = require('socket.io')(httpServer)
 
 io.on('connect', socket => {
   socket.broadcast.emit('newUser')
+  activeUsers++
+  io.emit('update-actives', activeUsers)
 })
 
 let rooms = {}
+let activeUsers = 0
 const users = []
 
 const removeEntryOfObjectProperties = (obj, entry) => {
@@ -23,6 +26,11 @@ const removeEntryOfObjectProperties = (obj, entry) => {
 }
 
 io.on('connection', socket => {
+  socket.on('disconnect', data => {
+    activeUsers--
+    io.emit('update-actives', activeUsers)
+  })
+
   socket.on('joinRoom', data => {
     const { cookie, room, currentRoom } = data
     if (!users.includes(cookie)) {

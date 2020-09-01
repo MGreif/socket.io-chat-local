@@ -19,11 +19,12 @@
   </style>
 </head>
 <body>
-  <input type="text" id="username"/>
+  <input type="text" id="username" placeholder="Username"/>
   <button id="r1" onclick="joinRoom(1)" > 1 </button>
   <button id="r2" onclick="joinRoom(2)" > 2 </button>
   <input type="text" id="textfield"/>
   <button id="btn" onclick="send()" > SEND </button>
+  <span>Active chatters: </span><span id="actives"></span>
   <div id="events">
 
   </div>
@@ -103,8 +104,13 @@
       })
 
       socket.on('connect', () => {
-        events.appendChild(newItem('connect'));
+        events.appendChild(newItem('connect'))
       });
+
+      socket.on('update-actives', actives => {
+        document.getElementById('actives').innerText = actives.toString()
+      })
+
   </script>
 </body>
 </html>
