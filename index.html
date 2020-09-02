@@ -8,7 +8,8 @@
     .right {
       display:inline-block; 
       width:100%; 
-      text-align:right
+      text-align:right;
+      background-color: #f1f1f1;
     }
     .left {
       display:inline-block; 
@@ -19,8 +20,8 @@
     #chat {
       width: 30vw;
       max-height: 50vh;
-      border: black solid 3px;
-      border-radius: 8px;
+      border: black solid 1px;
+      border-radius: 3px;
     }
 
     #events {
@@ -34,6 +35,8 @@
 
     header {
       margin: 1em;
+      display: flex;
+      justify-content: space-between;
     }
 
     #footer {
@@ -55,7 +58,61 @@
     }
 
     #events div {
-      margin: 1em 1em;
+      margin: 0.4em 1em;
+    }
+
+    #btn {
+      border: 3px solid #5c5c5c;
+    }
+
+    @media only screen and (max-width: 600px) {
+
+      body {
+        display: flex;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+      }
+      #chat {
+        width: 80vw;
+        height: fit-content;
+        margin: auto;
+        max-height: none;
+      }
+      header {
+        align-items: center;
+        height: fit-content;
+        width: 70vw;
+        flex-wrap: wrap;
+      }
+      header * {
+        height: 100% ;
+        margin: 0.1em;
+        flex-grow: auto;
+      }
+
+      #username {
+        height: calc(100% - 6px);
+      }
+
+      #events {
+        height: 60vh;
+      }
+
+      #footer {
+        display: flex;
+        height: fit-content;
+        flex-wrap: wrap;
+      }
+
+      input[type=text] {
+        min-width: 5em;
+      }
+
+    }
+
+    @media only screen and (max-width: 300px) {
+
     }
 
   </style>
@@ -66,7 +123,7 @@
       <input type="text" id="username" placeholder="Username"/>
       <button id="r1" onclick="joinRoom(1)" > Room 1 </button>
       <button id="r2" onclick="joinRoom(2)" > Room 2 </button>
-      <span>Active chatters: </span><span id="actives"></span>
+      <span>Active chatters: <span id="actives"></span></span>
     </header>
     <div id="events"></div>
     <div id="footer">
