@@ -12,4 +12,5 @@
 ## Uses Cookies!
 
 ## Usage
+ * `npm install`
  * `node index.js`
